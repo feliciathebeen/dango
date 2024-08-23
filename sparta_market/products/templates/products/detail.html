@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>디테일이다!</h1>
+
+    <p>제목: {{ article.title }}</p>
+    <p>내용: {{ article.content }}</p>
+    <p>작성일시: {{ article.created_at }}</p>
+    <p>수정일시: {{ article.updated_at }}</p>
+
+    <a href="{% url 'products:home' %}">목록 보기</a>
+
+{% endblock content %}

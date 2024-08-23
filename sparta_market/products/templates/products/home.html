@@ -1,4 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1>홈이다!</h1>
+<ul>
+{% for article in articles %}
+  <a href="{% url 'products:detail' article.pk %}">
+  <p>[ {{ article.pk }} ]{{ article.title }}</p>
+  </a>
+
+{% endfor %}
+</ul>
 {% endblock content %}
