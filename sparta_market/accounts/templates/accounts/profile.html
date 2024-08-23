@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>프로필이다!</h1>
+<p>Email: {{ user.email }}</p>
+<p>Date joined: {{ user.date_joined }}</p>
+<a href="{% url 'accounts:update'%}">회원정보수정</a><br>
+{% endblock content %}
