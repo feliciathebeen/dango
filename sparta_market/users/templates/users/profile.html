@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1> {{ member.username }}의 프로필 페이지 </h1>
+
+    <div>
+        <h3> username : {{ member.username }}</h3>
+
+        {% if request.user != member %}
+            <form action="{% url 'users:follow' member.pk %}" method="POST">
+            {% csrf_token %}
+
+            {% if request.user in member.followers.all %}
+                <input type="submit" value="언팔로우">
+            {% else %}
+                <input type="submit" value="팔로우">
+            {% endif %}            
+            </form>        
+        {% endif %}
+    </div>
+
+    <a href="{% url 'products:home' %}">홈으로 돌아가기</a>
+
+{% endblock content %}

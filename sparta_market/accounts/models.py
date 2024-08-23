@@ -4,4 +4,6 @@ from django import forms
 
 
 class User(AbstractUser):
-    user_id = models.CharField(max_length=10)
+    followings = models.ManyToManyField(
+        "self", related_name="followers", symmetrical=False
+    )

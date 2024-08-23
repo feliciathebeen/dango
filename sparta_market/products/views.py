@@ -2,4 +2,8 @@ from django.shortcuts import render
 
 
 def home(request):
-    return render(request, "products/home.html")
+    member = request.user
+    context = {
+        "member" : member
+    }
+    return render(request, "products/home.html", context)

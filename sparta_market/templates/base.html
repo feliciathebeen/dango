@@ -8,15 +8,32 @@
 <body>
 
     <div class="navbar">
+
         {% if request.user.is_authenticated %}
-            <h3>안녕하세요, {{ user }}님</h3>
-            <form action="{% url 'accounts:logout' %}" method="POST">
-                {% csrf_token %}
-                <input type="submit" value="로그아웃">
-            </form>
+        <h3>Hello, {{ request.user }}</h3>
+        <form action="{% url 'accounts:logout' %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="로그아웃">
+        </form>
+
+        <a href="{% url 'accounts:update' %}">회원정보 변경</a>
+
+        <form action="{% url 'accounts:delete' %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="회원탈퇴">
+        </form>
+
+        {% if member and member.username %}
+            <a href="{% url 'users:profile' member.username %}">프로필</a>
         {% else %}
-            <a href="{% url 'accounts:login'%}">로그인</a>
+            <span>프로필 정보가 없습니다.</span>
         {% endif %}
+
+        {% else %}
+        <a href="{% url 'accounts:login' %}">로그인</a>
+        <a href="{% url 'accounts:signup' %}">회원가입</a>
+        {% endif %}
+
     </div>
 
     <div class="container">
