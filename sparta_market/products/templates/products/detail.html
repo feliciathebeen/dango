@@ -7,6 +7,16 @@
     <p>작성일시: {{ article.created_at }}</p>
     <p>수정일시: {{ article.updated_at }}</p>
 
+    {% if user == article.author %}
+        <a href="{% url 'products:update' article.pk %}">
+            <button>수정하기</button>
+        </a>
+        <form action="{% url 'products:delete' article.pk %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="삭제">
+        </form>
+    {% endif %}
+
     <a href="{% url 'products:home' %}">목록 보기</a>
 
 {% endblock content %}

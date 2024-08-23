@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1>홈이다!</h1>
-<ul>
+<a href="{% url 'products:create' %}"><button>글 작성하기</button></a>
+<ol reversed>
 {% for article in articles %}
   <a href="{% url 'products:detail' article.pk %}">
-  <p>[ {{ article.pk }} ]{{ article.title }}</p>
+  <li>{{ article.title }}</li>
   </a>
 
 {% endfor %}
-</ul>
+</ol>
 {% endblock content %}
