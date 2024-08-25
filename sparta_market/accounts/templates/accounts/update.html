@@ -8,7 +8,7 @@
 </form><hr>
 <form action="{% url 'accounts:delete' %}" method="POST">
     {% csrf_token %}
-    <button type="submit">삭제</button>
+    <button type="submit">회원탈퇴</button>
 </form><hr>
 <a href="{% url 'accounts:change_password' %}"><button>비밀번호 변경</button></a>
 {% endblock content %}
