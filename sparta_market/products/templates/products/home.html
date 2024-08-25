@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
 <h1>홈이다!</h1>
+    <img src="{% static "products/me.png" %}" alt=""><br>
 <a href="{% url 'products:create' %}"><button>글 작성하기</button></a>
 <ol reversed>
 {% for article in articles %}

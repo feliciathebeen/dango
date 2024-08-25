@@ -3,6 +3,10 @@
 <h1>디테일이다!</h1>
 
     <p>제목: {{ article.title }}</p>
+    <p>작성자: {{ article.author.username }}</p>
+    {% if article.image %}
+		<img src="{{ article.image.url }}">
+    {% endif %}
     <p>내용: {{ article.content }}</p>
     <p>작성일시: {{ article.created_at }}</p>
     <p>수정일시: {{ article.updated_at }}</p>
@@ -17,6 +21,23 @@
         </form>
     {% endif %}
 
+    <hr>
+    <h3>댓글</h3>
+    <form action="{% url "products:comments_create" article.pk %}" method="POST">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <input type="submit" value="댓글작성">
+    </form>
+
+    {% for comment in comments %}
+    <ul>
+        <li>{{ comment.content }}</li>
+        <form action="{% url "products:comment_delete" article.pk comment.pk%}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="삭제">
+        </form>
+    </ul>
+    {% endfor %}
     <a href="{% url 'products:home' %}">목록 보기</a>
 
 {% endblock content %}
