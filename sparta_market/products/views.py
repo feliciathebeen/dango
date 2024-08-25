@@ -74,7 +74,7 @@ def delete(request, pk):
 
 
 @require_POST
-def comments_create(request, pk):
+def comment_create(request, pk):
     article = get_object_or_404(Article, pk=pk)
     form = CommentForm(request.POST)
     if form.is_valid():
@@ -86,6 +86,8 @@ def comments_create(request, pk):
 
 @require_POST
 def comment_delete(request, pk, comment_pk):
-    comment = get_object_or_404(Comment, pk=comment_pk)
-    comment.delete()
+    if request.user.is_authenticated:
+        comment = get_object_or_404(Comment, pk=comment_pk)
+        if comment.user == request.user:
+            comment.delete()
     return redirect("products:detail", pk)

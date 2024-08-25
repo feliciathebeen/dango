@@ -21,22 +21,33 @@
         </form>
     {% endif %}
 
+    {% if request.user.is_authenticated %}
+    <br>
     <hr>
-    <h3>댓글</h3>
-    <form action="{% url "products:comments_create" article.pk %}" method="POST">
+    <h3>댓글 {{ comments|length }}개</h3>
+    <form action="{% url "products:comment_create" article.pk %}" method="POST">
         {% csrf_token %}
         {{ comment_form.as_p }}
         <input type="submit" value="댓글작성">
     </form>
+    {% endif %}
 
     {% for comment in comments %}
     <ul>
-        <li>{{ comment.content }}</li>
+        <li>{{ comment.content }} - {{ comment.user.username }}</li>
+
+        {% if user == comment.user %}
         <form action="{% url "products:comment_delete" article.pk comment.pk%}" method="POST">
             {% csrf_token %}
             <input type="submit" value="삭제">
         </form>
+        {% endif %}
+
     </ul>
+
+    {% empty %}
+    <p>댓글이 없습니다.</p>
+
     {% endfor %}
     <a href="{% url 'products:home' %}">목록 보기</a>
 
