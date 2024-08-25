@@ -91,3 +91,17 @@ def comment_delete(request, pk, comment_pk):
         if comment.user == request.user:
             comment.delete()
     return redirect("products:detail", pk)
+
+
+@require_POST
+def like(request, pk):
+    if request.user.is_authenticated:
+        article = get_object_or_404(Article, pk=pk)
+        if article.like_users.filter(pk=request.user.pk).exists():
+            article.like_users.remove(request.user)
+        else:
+            article.like_users.add(request.user)
+    else:
+        return redirect("accounts:login")
+
+    return redirect("products:home")

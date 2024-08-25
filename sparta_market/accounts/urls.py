@@ -9,6 +9,7 @@ urlpatterns = [
     path("signup/", views.signup, name="signup"),
     path("update/", views.update, name="update"),
     path("delete/", views.delete, name="delete"),
-    path("profile/", views.profile, name="profile"),
     path("password/", views.change_password, name="change_password"),
+    path("profile/<str:username>/", views.profile, name="profile"),
+    path("<int:user_id>/follow/", views.follow, name="follow"),
 ]

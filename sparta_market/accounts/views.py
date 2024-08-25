@@ -1,5 +1,5 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import login as auth_login, update_session_auth_hash
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import login as auth_login, update_session_auth_hash, get_user_model
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth import logout as auth_logout
 from django.views.decorators.http import require_POST, require_http_methods
@@ -64,10 +64,6 @@ def delete(request):
     return redirect("products:home")
 
 
-def profile(request):
-    return render(request, "accounts/profile.html")
-
-
 @login_required
 @require_http_methods(["GET", "POST"])
 def change_password(request):
@@ -81,3 +77,24 @@ def change_password(request):
         form = PasswordChangeForm(request.user)
     context = {"form": form}
     return render(request, "accounts/change_password.html", context)
+
+
+def profile(request, username):
+    member = get_object_or_404(get_user_model(), username=username)
+    context = {
+        "username": member,
+    }
+    return render(request, "accounts/profile.html", context)
+
+
+@require_POST
+def follow(request, user_id):
+    if request.user.is_authenticated:
+        member = get_object_or_404(get_user_model(), pk=user_id)
+        if request.user != member:
+            if request.user in member.followers.all():
+                member.followers.remove(request.user)
+            else:
+                member.followers.add(request.user)
+        return redirect("accounts:profile", member.username)
+    return redirect("accounts:login")
