@@ -1,26 +1,48 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<h1>홈이다!</h1>
-    <img src="{% static "products/me.png" %}" alt=""><br>
-<a href="{% url 'products:create' %}"><button>글 작성하기</button></a>
-<ol reversed>
-{% for article in articles %}
-  <a href="{% url 'products:detail' article.pk %}">
-  <li>{{ article.title }}</li>
-  </a>
+{% comment %} <img src="{% static 'products/me.png' %}" alt=""><br> {% endcomment %}
 
-<form action="{% url 'products:like' article.pk %}" method="POST">
-    {% csrf_token %}
-    {% if request.user in article.like_users.all %}
-    <input type="submit" value="안좋아요">
-    {% else %}
-    <input type="submit" value="좋아요">
-    {% endif %}
-
+<!-- 정렬 옵션 추가 -->
+<form method="GET">
+    <label for="sort">정렬 기준:</label>
+    <select name="sort" id="sort" onchange="this.form.submit()">
+        <option value="latest" {% if sort_option == 'latest' %}selected{% endif %}>최신순</option>
+        <option value="popular" {% if sort_option == 'popular' %}selected{% endif %}>인기도순</option>
+    </select>
 </form>
 
 
+
+
+
+<a href="{% url 'products:create' %}"><button>글 작성하기</button></a>
+
+<div class="d-flex flex-wrap">
+{% for article in articles %}
+    <div class="card" style="width: 18rem; margin: 10px;">
+      <div class="card-body">
+        <h5 class="card-title">{{ article.title }}</h5>
+        <h6 class="card-subtitle mb-2 text-body-secondary">
+            <a href="{% url 'accounts:profile' article.author.username %}">
+            {{ article.author.username }}
+            </a>
+        </h6>
+        <a href="{% url 'products:detail' article.pk %}" class="btn btn-primary">상품 정보</a>
+
+        <p>조회수: {{ article.view_count }} 찜수: {{ article.like_count }}</p>
+        
+
+        <form action="{% url 'products:like' article.pk %}" method="POST">
+            {% csrf_token %}
+            {% if request.user in article.like_users.all %}
+                <input type="submit" value="안좋아요">
+            {% else %}
+                <input type="submit" value="좋아요">
+            {% endif %}
+        </form>
+      </div>
+    </div>
 {% endfor %}
-</ol>
+</div>
 {% endblock content %}

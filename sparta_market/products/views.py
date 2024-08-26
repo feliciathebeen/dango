@@ -1,23 +1,36 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_http_methods, require_POST
+from django.db.models import Count
 
 from .models import Article, Comment
 from .forms import ArticleForm, CommentForm
 
 
 def home(request):
-    articles = Article.objects.all().order_by("-id")
+    sort_option = request.GET.get('sort', 'latest')
+
+    if sort_option == 'popular':
+        articles = Article.objects.annotate(like_count=Count('like_users')).order_by('-like_count', '-created_at')
+    else:
+        articles = Article.objects.order_by('-created_at')
+    
     context = {
-        "articles": articles,
+        'articles': articles, 
+        'sort_option': sort_option,
     }
-    return render(request, "products/home.html", context)
+
+    return render(request, 'products/home.html', context)
 
 
 def detail(request, pk):
     article = Article.objects.get(pk=pk)
     comment_form = CommentForm()
     comments = article.comments.all()
+    # 조회수 증가
+    article.view_count += 1
+    article.save()
+
     print(comments)
     context = {
         "article": article,
@@ -80,6 +93,7 @@ def comment_create(request, pk):
     if form.is_valid():
         comment = form.save(commit=False)
         comment.article = article
+        comment.user = request.user
         comment.save()
     return redirect("products:detail", article.pk)
 

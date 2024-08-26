@@ -6,11 +6,12 @@ from django.urls import reverse
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = get_user_model()
-        fields = UserCreationForm.Meta.fields + ()
+        # fields = UserCreationForm.Meta.fields + ()
+        fields = "__all__"
+        exclude = ("password2",)
 
 
 class CustomUserChangeForm(UserChangeForm):
-
     class Meta:
         model = get_user_model()
         fields = (

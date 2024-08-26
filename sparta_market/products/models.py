@@ -4,18 +4,17 @@ from sparta_market import settings
 
 
 class Article(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    image = models.ImageField(upload_to="images/", blank=True)
-    like_users = models.ManyToManyField(
-        settings.AUTH_USER_MODEL, related_name="like_articles"
-    )
+    image = models.ImageField(upload_to='images/', blank=True)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_articles')
+    view_count = models.PositiveIntegerField(default=0)  # 조회수 필드 추가
 
-    def __str__(self):
-        return self.title
+    def like_count(self):
+        return self.like_users.count()  # 찜수 계산
 
 
 class Comment(models.Model):

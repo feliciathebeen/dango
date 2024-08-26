@@ -1,13 +1,33 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>Edit Article</h2>
+<h3>글 수정</h3>
 
 <form action="{% url 'products:update' article.pk %}" method="POST" enctype="multipart/form-data">
   {% csrf_token %}
-  {{ form.as_p }}
 
-  <button type="submit">저장</button>
+  <label for="title">제목</label>
+  <input type="text" name="title" id="title" value="{{ form.title.value }}" class="form-control"><br>
+
+  <label for="content">내용</label>
+  <textarea name="content" id="content" cols="30" rows="10" class="form-control">{{ form.content.value }}</textarea><br>
+
+  <label for="image">이미지 변경</label>
+  <input type="file" name="image" id="image" accept="image/*" onchange="previewImage(event)" class="form-control"><br>
+  {% if article.image %}
+  <img id="image-preview" src="{{ article.image.url }}" alt="{{ article.title }}" style="max-width: 300px; max-height: 300px;" class="img-fluid"><br>
+  {% endif %}
+
+  <div style="display: flex; gap: 10px;">
+    <button type="submit" class="btn btn-primary">저장</button>
+    <a href="{% url 'products:detail' article.pk %}" class="btn btn-secondary">이전으로</a>
+  </div>
 </form>
 
-<a href="{% url 'products:detail' article.pk %}"><button>이전으로</button></a>
+<script>
+function previewImage(event) {
+    var image = document.getElementById('image-preview');
+    var label = document.getElementById('image-label');
+    image.src = URL.createObjectURL(event.target.files[0]);
+}
+</script>
 {% endblock content %}

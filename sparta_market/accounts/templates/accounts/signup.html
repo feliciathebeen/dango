@@ -4,6 +4,32 @@
 <form action="{% url 'accounts:signup' %}" method="POST">
     {% csrf_token %}
     {{ form.as_p }}
+    
+    <label for="image">이미지</label>
+    <input type="file" name="image" id="image" accept="image/*" onchange="previewImage(event)" class="form-control"><br>
+
+    <img id="image-preview" style="max-width: 300px; max-height: 300px; display: none;"><br>
+    
+    <script>
+        function test(event){
+            const file = event.target.files[0];
+            console.log(file);
+        }
+    </script>
+
+
+
     <button type="submit">가입하기</button>
 </form>
+
+
+<script>
+function previewImage(event) {
+    var image = document.getElementById('image-preview');
+    image.src = URL.createObjectURL(event.target.files[0]);
+    image.style.display = 'block';
+}
+</script>
+
+
 {% endblock content %}

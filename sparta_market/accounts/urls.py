@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 app_name = "accounts"
 urlpatterns = [
@@ -13,3 +15,6 @@ urlpatterns = [
     path("profile/<str:username>/", views.profile, name="profile"),
     path("<int:user_id>/follow/", views.follow, name="follow"),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

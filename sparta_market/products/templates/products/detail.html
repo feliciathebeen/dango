@@ -1,25 +1,24 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>디테일이다!</h1>
-
-    <p>제목: {{ article.title }}</p>
-    <p>작성자: {{ article.author.username }}</p>
     {% if article.image %}
-		<img src="{{ article.image.url }}">
+        <img src="{{ article.image.url }}" alt="{{ article.title }}" >
     {% endif %}
-    <p>내용: {{ article.content }}</p>
-    <p>작성일시: {{ article.created_at }}</p>
-    <p>수정일시: {{ article.updated_at }}</p>
 
+    <h3>{{ article.title }}</h3>
+    <p>작성일시: {{ article.created_at }}, 수정일시: {{ article.updated_at }}</p>
+    <p>{{ article.content }}</p>
+
+    
+    <hr>
     {% if user == article.author %}
-        <a href="{% url 'products:update' article.pk %}">
-            <button>수정하기</button>
-        </a>
-        <form action="{% url 'products:delete' article.pk %}" method="POST">
+        <a href="{% url 'products:update' article.pk %}" class="btn btn-primary me-2">수정</a>
+        <form action="{% url 'products:delete' article.pk %}" method="POST" class="d-inline">
             {% csrf_token %}
-            <input type="submit" value="삭제">
+            <input type="submit" value="삭제" class="btn btn-danger me-2">
         </form>
     {% endif %}
+
+    <a href="{% url 'products:home' %}" class="btn btn-secondary">목록</a>
 
     {% if request.user.is_authenticated %}
     <br>

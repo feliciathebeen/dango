@@ -5,6 +5,8 @@ from django.contrib.auth import logout as auth_logout
 from django.views.decorators.http import require_POST, require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
+
+from products.models import Article
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 
 
@@ -32,14 +34,17 @@ def logout(request):
 
 def signup(request):
     if request.method == "POST":
-        form = CustomUserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST, request.FILES)
+        print(form.fields)
         if form.is_valid():
             user = form.save()
             auth_login(request, user)
             return redirect("products:home")
     else:
         form = UserCreationForm()
-    context = {"form": form}
+    context = {
+        "form": form,
+        }
     return render(request, "accounts/signup.html", context)
 
 
@@ -81,8 +86,11 @@ def change_password(request):
 
 def profile(request, username):
     member = get_object_or_404(get_user_model(), username=username)
+    articles = Article.objects.filter(author_id=member.id)
+    print(member.image)
     context = {
         "username": member,
+        'articles': articles,
     }
     return render(request, "accounts/profile.html", context)
 
