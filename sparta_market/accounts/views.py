@@ -6,6 +6,7 @@ from django.views.decorators.http import require_POST, require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from .forms import CustomUserCreationForm, CustomUserChangeForm
+from products.models import Article
 
 
 # from .forms import CustomUserCreationForm
@@ -65,7 +66,15 @@ def delete(request):
 
 
 def profile(request):
-    return render(request, "accounts/profile.html")
+    user = request.user
+    articles = Article.objects.filter(author_id=user.id)
+    
+    context = {
+        'user': user,
+        'articles': articles,
+    }
+    
+    return render(request, 'accounts/profile.html', context)
 
 
 @login_required

@@ -24,17 +24,21 @@ def detail(request, pk):
 
 @login_required
 def create(request):
-    if request.method == "POST":
-        form = ArticleForm(request.POST, request.FILES)
-        if form.is_valid():
-            article = form.save(commit=False)
-            article.author = request.user
-            article.save()
-            return redirect("products:detail", article.pk)
-    else:
-        form = ArticleForm()
-    context = {"form": form}
-    return render(request, "products/create.html", context)
+    if request.method == 'POST':
+        title = request.POST['title']
+        content = request.POST['content']
+        image = request.FILES.get('image')
+
+        article = Article.objects.create(
+            author = request.user,
+            title = title,
+            content = content,
+            image = image
+        )
+
+        return redirect('products:detail', pk=article.pk)
+    
+    return render(request, 'products/create.html')
 
 
 @login_required
@@ -43,7 +47,7 @@ def update(request, pk):
     article = get_object_or_404(Article, pk=pk)
     if article.author == request.user:
         if request.method == "POST":
-            form = ArticleForm(request.POST, instance=article)
+            form = ArticleForm(request.POST, request.FILES, instance=article)
             if form.is_valid():
                 article = form.save()
                 return redirect("products:detail", article.pk)
@@ -51,10 +55,12 @@ def update(request, pk):
             form = ArticleForm(instance=article)
     else:
         return redirect("products:home")
+    
     context = {
         "form": form,
         "article": article,
     }
+    
     return render(request, "products/update.html", context)
 
 
