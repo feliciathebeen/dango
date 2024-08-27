@@ -1,11 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
     <h1>{{ username.username }}의 프로필 페이지</h1>
-    <a href="{% url 'accounts:update'%}">회원정보수정</a>
+    <a href="{% url 'accounts:update'%}" class="btn btn-primary mb-3">회원정보수정</a>
     <div>
-
         {% if username.image %}
-            <img src="{{ username.image.url }}">
+            <img src="{{ username.image.url }}" alt="{{ username.username }}의 프로필 이미지" class="img-fluid rounded mb-3" style="max-width: 200px;">
         {% endif %}
 
         <h2>username : {{ username.username }}</h2>
@@ -16,12 +15,12 @@
     </div>
 
     <div>
-        <form action="{% url "accounts:follow" username.pk %}" method="POST">
+        <form action="{% url 'accounts:follow' username.pk %}" method="POST" class="mb-3">
             {% csrf_token %}
             {% if user in username.followers.all %}
-                <button type="submit">언팔로우</button>
+                <button type="submit" class="btn btn-danger">언팔로우</button>
             {% else %}
-                <button type="submit">팔로우</button>
+                <button type="submit" class="btn btn-success">팔로우</button>
             {% endif %}
         </form>
     </div>
@@ -40,8 +39,4 @@
         {% endfor %}
     </div>
     </ol>
-
-    
-
-    
 {% endblock content %}

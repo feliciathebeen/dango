@@ -10,9 +10,6 @@ from products.models import Article
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 
 
-# from .forms import CustomUserCreationForm
-
-
 def login(request):
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
@@ -35,25 +32,23 @@ def logout(request):
 def signup(request):
     if request.method == "POST":
         form = CustomUserCreationForm(request.POST, request.FILES)
-        print(form.fields)
         if form.is_valid():
             user = form.save()
             auth_login(request, user)
             return redirect("products:home")
     else:
-        form = UserCreationForm()
-    context = {
-        "form": form,
-        }
+        form = CustomUserCreationForm()
+    context = {"form": form}
     return render(request, "accounts/signup.html", context)
 
 
 @require_http_methods(["GET", "POST"])
 def update(request):
     if request.method == "POST":
-        form = CustomUserChangeForm(request.POST, instance=request.user)
+        form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            auth_login(request, user)
             return redirect("products:home")
     else:
         form = CustomUserChangeForm(instance=request.user)

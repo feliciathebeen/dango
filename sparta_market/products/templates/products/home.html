@@ -3,20 +3,21 @@
 {% block content %}
 {% comment %} <img src="{% static 'products/me.png' %}" alt=""><br> {% endcomment %}
 
-<!-- 정렬 옵션 추가 -->
-<form method="GET">
-    <label for="sort">정렬 기준:</label>
-    <select name="sort" id="sort" onchange="this.form.submit()">
-        <option value="latest" {% if sort_option == 'latest' %}selected{% endif %}>최신순</option>
-        <option value="popular" {% if sort_option == 'popular' %}selected{% endif %}>인기도순</option>
-    </select>
-</form>
+<div class="d-flex justify-content-end align-items-center mb-3">
 
+    <!-- 정렬 옵션 추가 -->
+    <form method="GET" class="d-flex align-items-center me-2">
+        <label for="sort" class="me-2 mb-0" style="white-space: nowrap;">정렬 기준:</label>  <!-- white-space 추가 -->
+        <select name="sort" id="sort" class="form-select" onchange="this.form.submit()">
+            <option value="latest" {% if sort_option == 'latest' %}selected{% endif %}>최신순</option>
+            <option value="popular" {% if sort_option == 'popular' %}selected{% endif %}>인기도순</option>
+        </select>
+    </form>
 
-
-
-
-<a href="{% url 'products:create' %}"><button>글 작성하기</button></a>
+    <a href="{% url 'products:create' %}">
+        <button class="btn btn-primary">글 작성하기</button>
+    </a>
+</div>
 
 <div class="d-flex flex-wrap">
 {% for article in articles %}
@@ -28,17 +29,16 @@
             {{ article.author.username }}
             </a>
         </h6>
-        <a href="{% url 'products:detail' article.pk %}" class="btn btn-primary">상품 정보</a>
-
-        <p>조회수: {{ article.view_count }} 찜수: {{ article.like_count }}</p>
         
-
+        <h5>조회수: {{ article.view_count }} 찜수: {{ article.like_count }}</h5>
+        
+        <a href="{% url 'products:detail' article.pk %}" class="btn btn-primary">상품 정보</a>
         <form action="{% url 'products:like' article.pk %}" method="POST">
             {% csrf_token %}
             {% if request.user in article.like_users.all %}
-                <input type="submit" value="안좋아요">
+                <input type="submit" value="안좋아요" class="btn btn-danger">
             {% else %}
-                <input type="submit" value="좋아요">
+                <input type="submit" value="좋아요" class="btn btn-success">
             {% endif %}
         </form>
       </div>
