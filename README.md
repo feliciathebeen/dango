@@ -109,11 +109,13 @@
 
 
 ## ERD
+![spartamarket_erd](https://github.com/user-attachments/assets/81d53f4e-e40a-4054-8d69-1919a15efa00)
 <br>
 <br>
 
 
 ## 프로젝트 파일 구조
+![페이지_플로우차트](https://github.com/user-attachments/assets/703ce905-32e0-42e4-aaf9-25cbeeb9fad1)
 <br>
 <br>
 
