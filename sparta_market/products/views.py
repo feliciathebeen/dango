@@ -5,7 +5,7 @@ from django.db.models import Count
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 
-from .models import Article, Comment, Hashtag
+from .models import Article, Comment
 from .forms import ArticleForm, CommentForm
 
 
@@ -13,25 +13,27 @@ def home(request):
     sort_option = request.GET.get('sort', 'latest')
 
     if sort_option == 'popular':
-        articles = Article.objects.annotate(like_count=Count('like_users')).order_by('-like_count', '-created_at')
+        articles = Article.objects.annotate(like_count=Count(
+            'like_users')).order_by('-like_count', '-created_at')
     else:
         articles = Article.objects.order_by('-created_at')
-    
+
     context = {
-        'articles': articles, 
+        'articles': articles,
         'sort_option': sort_option,
     }
 
     return render(request, 'products/home.html', context)
 
 
-def search(request) :
-    word= request.GET.get('word')
-    outcomes = Article.objects.filter( Q(title__icontains=word) | Q(content__icontains=word) | Q(author__username__icontains=word)  ).order_by('-id')
+def search(request):
+    word = request.GET.get('word')
+    outcomes = Article.objects.filter(Q(title__icontains=word) | Q(
+        content__icontains=word) | Q(author__username__icontains=word)).order_by('-id')
 
     context = {'word': word,
-             'outcomes': outcomes, }
-    return render(request, 'products/search.html', context )
+               'outcomes': outcomes, }
+    return render(request, 'products/search.html', context)
 
 
 def detail(request, pk):
@@ -59,27 +61,11 @@ def create(request):
             article = form.save(commit=False)
             article.author = request.user
             article.save()
-            # 최종 저장된 content를 조작하기 위해 article.save()보다 아래에 작성
-            for word in article.content.split():  # content를 공백기준 리스트로 변경
-                if word.startswith('#'):  # '#' 로 시작하는 요소 선택
-                   hashtag, created = Hashtag.objects.get_or_create(content=word)
-                   article.hashtags.add(hashtag)
             return redirect("products:detail", article.pk)
     else:
         form = ArticleForm()
     context = {"form": form}
     return render(request, "products/create.html", context)
-
-
-@login_required
-def hashtag(request, pk):
-    hashtag = get_object_or_404(Hashtag, pk=pk)
-    articles = hashtag.article_hashtag.order_by('-pk')
-    context = {
-        'hashtag': hashtag, 
-        'articles': articles,
-    }
-    return render(request, 'products/hashtag.html', context)
 
 
 @login_required
@@ -144,12 +130,10 @@ def like(request, pk):
             article.like_users.add(request.user)
     else:
         return redirect("accounts:login")
-    
+
     # 사용자가 디테일 페이지에 있었다면 디테일 페이지로 리디렉션
     if 'detail' in request.META.get('HTTP_REFERER', ''):
         return redirect("products:detail", pk=pk)
 
     # 그렇지 않으면 현재 페이지 유지
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
-    
-    
