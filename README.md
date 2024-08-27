@@ -115,7 +115,7 @@
 
 
 ## 프로젝트 파일 구조
-![페이지_플로우차트](https://github.com/user-attachments/assets/703ce905-32e0-42e4-aaf9-25cbeeb9fad1)
+![페이지 플로우차트](https://github.com/user-attachments/assets/681dcb45-e1bc-43e9-ac99-1c9a5b7e07e8)
 <br>
 <br>
 
