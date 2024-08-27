@@ -5,6 +5,8 @@
 
 <form action="{% url 'products:create' %}" method="POST" enctype="multipart/form-data">  <!-- enctype 추가 -->
     {% csrf_token %}
+    {% comment %} {{ form.as_p }} {% endcomment %}
+    
     <label for="title">제목</label>
     <input type="text" name="title" id="title" class="form-control"><br>
     <label for="content">내용</label>
@@ -15,7 +17,8 @@
 
     <img id="image-preview" style="max-width: 300px; max-height: 300px; display: none;"><br>
 
-    <button type="submit" class="btn btn-primary">작성</button>
+    <button type="submit" class="btn btn-primary">작성</button> 
+    
 </form>
 
 <script>

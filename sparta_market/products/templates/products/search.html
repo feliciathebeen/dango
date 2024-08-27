@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<br>
+{% if word %}
+<h5><b>{{ word }}</b>가 포함된 게시물</h5>
+{% else %}
+<h4>전체 게시물</h4>
+{% endif %}
+<hr>
+
+<table >
+     <tr>
+      <th scope="col" style="width:25%">글번호</th>
+      <th scope="col" style="width:65%">제목</th>
+      <th scope="col" style="width:50%">작성자</th>
+     </tr>
+
+
+{% if outcomes %}
+{% for outcome in outcomes %}
+<tr >
+    <td> <a href="{% url 'products:detail' outcome.pk %}"> [{{outcome.pk}}] </a></td>
+    <td> <a href="{% url 'products:detail' outcome.pk %}"> {{ outcome.title }} </a></td>
+    <td> <a href="{% url 'accounts:profile' outcome.author %}"> {{outcome.author}} </a> </td>
+</tr>
+{% endfor %}
+
+</table>
+{% else %}
+<p>검색결과가 없습니다</p>
+{% endif %}
+
+<br> <hr> <br> <br>
+<a href="{% url 'products:create' %}"><button>글 작성하기</button></a>
+
+
+{% endblock content %}

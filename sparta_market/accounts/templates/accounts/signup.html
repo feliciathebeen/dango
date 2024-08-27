@@ -1,24 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1>회원가입이다!</h1>
-<form action="{% url 'accounts:signup' %}" method="POST">
+<form action="{% url 'accounts:signup' %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
+    <!-- form.as_p로 이미지를 제외한 나머지 필드를 출력 -->
+    {% for field in form %}
+        {% if field.name != 'image' %}
+            <p>{{ field.label_tag }} {{ field }}</p>
+        {% endif %}
+    {% endfor %}
     
     <label for="image">이미지</label>
     <input type="file" name="image" id="image" accept="image/*" onchange="previewImage(event)" class="form-control"><br>
 
     <img id="image-preview" style="max-width: 300px; max-height: 300px; display: none;"><br>
-    
-    <script>
-        function test(event){
-            const file = event.target.files[0];
-            console.log(file);
-        }
-    </script>
-
-
-
     <button type="submit">가입하기</button>
 </form>
 

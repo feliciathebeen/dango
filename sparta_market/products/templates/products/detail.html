@@ -5,11 +5,26 @@
     {% endif %}
 
     <h3>{{ article.title }}</h3>
+    <div class="d-flex justify-content-between align-items-center mb-3" style="margin-top : 10px;">
     <p>작성일시: {{ article.created_at }}, 수정일시: {{ article.updated_at }}</p>
+    <p>조회수: {{ article.view_count }}</p>
+    </div>
     <p>{{ article.content }}</p>
 
-    
+    <form action="{% url 'products:like' article.pk %}" method="POST">
+        {% csrf_token %}
+        <button class="btn btn-light">
+            {% if request.user in article.like_users.all %}
+                ❤️{{ article.like_count }}
+            {% else %}
+                💔{{ article.like_count }}
+            {% endif %}
+        </button>
+        
+    </form>
     <hr>
+    
+
     {% if user == article.author %}
         <a href="{% url 'products:update' article.pk %}" class="btn btn-primary me-2">수정</a>
         <form action="{% url 'products:delete' article.pk %}" method="POST" class="d-inline">

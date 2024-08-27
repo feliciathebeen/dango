@@ -1,17 +1,19 @@
+from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.urls import reverse
 
 
+
 class CustomUserCreationForm(UserCreationForm):
+    image = forms.ImageField(required=False)
     class Meta:
         model = get_user_model()
-        # fields = UserCreationForm.Meta.fields + ()
-        fields = "__all__"
-        exclude = ("password2",)
+        fields = UserCreationForm.Meta.fields + ('image',)
 
 
 class CustomUserChangeForm(UserChangeForm):
+    image = forms.ImageField(required=False)
     class Meta:
         model = get_user_model()
         fields = (
@@ -19,6 +21,7 @@ class CustomUserChangeForm(UserChangeForm):
             "email",
             "first_name",
             "last_name",
+            "image",
         )
 
     def __init__(self, *args, **kwargs):

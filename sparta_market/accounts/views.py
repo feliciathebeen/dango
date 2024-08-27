@@ -35,13 +35,15 @@ def logout(request):
 def signup(request):
     if request.method == "POST":
         form = CustomUserCreationForm(request.POST, request.FILES)
-        print(form.fields)
         if form.is_valid():
-            user = form.save()
+            user = form.save(commit=False)
+            if not user.image:  # 이미지가 없는 경우
+                user.image = 'images/default_profile_pic.png'  # 이미지 파일을 저장
+            user.save()
             auth_login(request, user)
             return redirect("products:home")
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
     context = {
         "form": form,
         }
@@ -51,7 +53,7 @@ def signup(request):
 @require_http_methods(["GET", "POST"])
 def update(request):
     if request.method == "POST":
-        form = CustomUserChangeForm(request.POST, instance=request.user)
+        form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
             return redirect("products:home")
@@ -87,10 +89,12 @@ def change_password(request):
 def profile(request, username):
     member = get_object_or_404(get_user_model(), username=username)
     articles = Article.objects.filter(author_id=member.id)
+    article_like = Article.objects.filter(like_users=member)
     print(member.image)
     context = {
         "username": member,
         'articles': articles,
+        'article_like': article_like,
     }
     return render(request, "accounts/profile.html", context)
 

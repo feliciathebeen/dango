@@ -12,9 +12,17 @@ class Article(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_articles')
     view_count = models.PositiveIntegerField(default=0)  # 조회수 필드 추가
+    hashtags = models.ManyToManyField("Hashtag", blank=True, related_name='article_hashtag')
 
     def like_count(self):
         return self.like_users.count()  # 찜수 계산
+
+
+class Hashtag(models.Model):
+    content = models.TextField(unique=True)
+
+    def __str__(self):
+        return self.content
 
 
 class Comment(models.Model):
