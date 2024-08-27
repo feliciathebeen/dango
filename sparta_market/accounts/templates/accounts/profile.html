@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
     <h1>{{ username.username }}의 프로필 페이지</h1>
+    {% if username == request.user %}
     <a href="{% url 'accounts:update'%}" class="btn btn-primary mb-3">회원정보수정</a>
+    {% endif %}
     <div>
         {% if username.image %}
             <img src="{{ username.image.url }}" alt="{{ username.username }}의 프로필 이미지" class="img-fluid rounded mb-3" style="max-width: 200px;">
